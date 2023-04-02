@@ -150,6 +150,9 @@ class CategoricalVAE(BaseVAE):
         input = args[1]
         q = args[2]
 
+        print(recons.shape)
+        print(input.shape)
+
         q_p = F.softmax(q, dim=-1) # Convert the categorical codes into probabilities
 
         kld_weight = kwargs['M_N'] # Account for the minibatch samples from the dataset
