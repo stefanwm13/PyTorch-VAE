@@ -98,6 +98,7 @@ class CategoricalVAE(BaseVAE):
 
         # Split the result into mu and var components
         # of the latent Gaussian distribution
+        print(result.shape)
         z = self.fc_z(result)
         z = z.view(-1, self.latent_dim, self.categorical_dim)
         return [z]
