@@ -19,7 +19,7 @@ parser.add_argument('--config',  '-c',
                     dest="filename",
                     metavar='FILE',
                     help =  'path to the config file',
-                    default='configs/vae.yaml')
+                    default='configs/cat_vae.yaml')
 
 args = parser.parse_args()
 with open(args.filename, 'r') as file:
@@ -41,7 +41,7 @@ experiment = VAEXperiment(model,
 
 data = VAEDataset(**config["data_params"], pin_memory=len(config['trainer_params']['gpus']) != 0)
 
-data.setup()
+data.setup_mnist()
 runner = Trainer(logger=tb_logger,
                  callbacks=[
                      LearningRateMonitor(),

@@ -2,7 +2,7 @@ model_params:
   name: 'CategoricalVAE'
   in_channels: 3
   latent_dim: 512
-  categorical_dim: 40
+  categorical_dim: 10
   temperature: 0.5
   anneal_rate: 0.00003
   anneal_interval: 100

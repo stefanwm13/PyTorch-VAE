@@ -7,7 +7,7 @@ from torchvision.datasets.folder import default_loader
 from pytorch_lightning import LightningDataModule
 from torch.utils.data import DataLoader, Dataset
 from torchvision import transforms
-from torchvision.datasets import CelebA
+from torchvision.datasets import CelebA, MNIST
 import zipfile
 
 
@@ -97,7 +97,35 @@ class VAEDataset(LightningDataModule):
         self.num_workers = num_workers
         self.pin_memory = pin_memory
 
-    def setup(self, stage: Optional[str] = None) -> None:
+    def setup_mnist(self, stage: Optional[str] = None) -> None:
+        train_transforms = transforms.Compose([
+                               transforms.ToTensor(),
+                               transforms.Normalize(
+                                 (0.1307,), (0.3081,))
+                             ])
+
+        val_transforms = transforms.Compose([
+                               transforms.ToTensor(),
+                               transforms.Normalize(
+                                 (0.1307,), (0.3081,))
+                             ])
+
+        self.train_dataset = MNIST(
+            self.data_dir,
+            train=True,
+            transform=train_transforms,
+            download=True,
+        )
+
+        self.val_dataset = MNIST(
+            self.data_dir,
+            train=False,
+            transform=val_transforms,
+            download=True,
+        )
+
+
+    def setup_celeba(self, stage: Optional[str] = None) -> None:
 #       =========================  OxfordPets Dataset  =========================
             
 #         train_transforms = transforms.Compose([transforms.RandomHorizontalFlip(),
