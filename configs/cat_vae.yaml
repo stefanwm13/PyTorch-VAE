@@ -1,6 +1,6 @@
 model_params:
   name: 'CategoricalVAE'
-  in_channels: 3
+  in_channels: 1
   latent_dim: 512
   categorical_dim: 10
   temperature: 0.5
