@@ -32,7 +32,7 @@ class CategoricalVAE(BaseVAE):
         if hidden_dims is None:
             hidden_dims = [32, 64, 128,256]
 
-        print(hidden_dims)
+        #print(hidden_dims)
 
         # Build Encoder
         for h_dim in hidden_dims:
@@ -99,13 +99,13 @@ class CategoricalVAE(BaseVAE):
         :return: (Tensor) Latent code [B x D x Q]
         """
         result = self.encoder(input)
-        print(result.shape)
+        #print(result.shape)
         
         result = torch.flatten(result, start_dim=1)
 
         # Split the result into mu and var components
         # of the latent Gaussian distribution
-        print(result.shape)
+        #print(result.shape)
         z = self.fc_z(result)
         z = z.view(-1, self.latent_dim, self.categorical_dim)
         return [z]
@@ -118,10 +118,10 @@ class CategoricalVAE(BaseVAE):
         :return: (Tensor) [B x C x H x W]
         """
         result = self.decoder_input(z)
-        print(result.shape)
+        #print(result.shape)
         result = result.view(-1, 256, 2, 2)
         result = self.decoder(result)
-        print(result.shape)
+        #print(result.shape)
         result = self.final_layer(result)
         return result
 
@@ -161,8 +161,8 @@ class CategoricalVAE(BaseVAE):
         q = args[2]
         
         
-        print("RECON: ", recons.shape)
-        print("INPUT: ", input.shape)
+        #print("RECON: ", recons.shape)
+        #print("INPUT: ", input.shape)
 
         q_p = F.softmax(q, dim=-1) # Convert the categorical codes into probabilities
 
@@ -220,4 +220,4 @@ class CategoricalVAE(BaseVAE):
         :return: (Tensor) [B x C x H x W]
         """
 
-        return self.forward(x)[0]
+        return self.forward(x)

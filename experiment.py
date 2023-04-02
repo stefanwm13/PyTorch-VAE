@@ -68,7 +68,11 @@ class VAEXperiment(pl.LightningModule):
         test_label = test_label.to(self.curr_device)
 
 #         test_input, test_label = batch
-        recons = self.model.generate(test_input, labels = test_label)
+        recons, input, q = self.model.generate(test_input, labels = test_label)
+
+        print(torch.argmax(F.softmax(q, dim=1), dim=1).shape)
+        print(test_label.shape)
+
         vutils.save_image(recons.data,
                           os.path.join(self.logger.log_dir , 
                                        "Reconstructions", 
