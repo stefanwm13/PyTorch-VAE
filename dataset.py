@@ -112,14 +112,14 @@ class VAEDataset(LightningDataModule):
 
         self.train_dataset = MNIST(
             self.data_dir,
-            train=True,
+            split="train",
             transform=train_transforms,
             download=True,
         )
 
         self.val_dataset = MNIST(
             self.data_dir,
-            train=False,
+            split="test",
             transform=val_transforms,
             download=True,
         )
