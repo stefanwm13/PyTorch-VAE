@@ -97,30 +97,32 @@ class VAEXperiment(pl.LightningModule):
         optimizer = optim.Adam(self.model.parameters(),
                                lr=self.params['LR'],
                                weight_decay=self.params['weight_decay'])
-        optims.append(optimizer)
-        # Check if more than 1 optimizer is required (Used for adversarial training)
-        try:
-            if self.params['LR_2'] is not None:
-                optimizer2 = optim.Adam(getattr(self.model,self.params['submodel']).parameters(),
-                                        lr=self.params['LR_2'])
-                optims.append(optimizer2)
-        except:
-            pass
 
-        try:
-            if self.params['scheduler_gamma'] is not None:
-                scheduler = optim.lr_scheduler.ExponentialLR(optims[0],
-                                                             gamma = self.params['scheduler_gamma'])
-                scheds.append(scheduler)
+        return optimizer
+        # optims.append(optimizer)
+        # # Check if more than 1 optimizer is required (Used for adversarial training)
+        # try:
+        #     if self.params['LR_2'] is not None:
+        #         optimizer2 = optim.Adam(getattr(self.model,self.params['submodel']).parameters(),
+        #                                 lr=self.params['LR_2'])
+        #         optims.append(optimizer2)
+        # except:
+        #     pass
 
-                # Check if another scheduler is required for the second optimizer
-                try:
-                    if self.params['scheduler_gamma_2'] is not None:
-                        scheduler2 = optim.lr_scheduler.ExponentialLR(optims[1],
-                                                                      gamma = self.params['scheduler_gamma_2'])
-                        scheds.append(scheduler2)
-                except:
-                    pass
-                return optims, scheds
-        except:
-            return optims
+        # try:
+        #     if self.params['scheduler_gamma'] is not None:
+        #         scheduler = optim.lr_scheduler.ExponentialLR(optims[0],
+        #                                                      gamma = self.params['scheduler_gamma'])
+        #         scheds.append(scheduler)
+
+        #         # Check if another scheduler is required for the second optimizer
+        #         try:
+        #             if self.params['scheduler_gamma_2'] is not None:
+        #                 scheduler2 = optim.lr_scheduler.ExponentialLR(optims[1],
+        #                                                               gamma = self.params['scheduler_gamma_2'])
+        #                 scheds.append(scheduler2)
+        #         except:
+        #             pass
+        #         return optims, scheds
+        # except:
+        #     return optims
