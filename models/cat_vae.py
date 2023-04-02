@@ -30,7 +30,9 @@ class CategoricalVAE(BaseVAE):
 
         modules = []
         if hidden_dims is None:
-            hidden_dims = [32, 64, 128, 256, 512]
+            hidden_dims = [32, 64, 128,256]
+
+        print(hidden_dims)
 
         # Build Encoder
         for h_dim in hidden_dims:
@@ -42,16 +44,18 @@ class CategoricalVAE(BaseVAE):
                     nn.LeakyReLU())
             )
             in_channels = h_dim
+            
+        print("ENCODER: ", modules)
 
         self.encoder = nn.Sequential(*modules)
-        self.fc_z = nn.Linear(hidden_dims[-1]*4,
+        self.fc_z = nn.Linear(hidden_dims[-1] * 4,
                                self.latent_dim * self.categorical_dim)
 
         # Build Decoder
         modules = []
 
         self.decoder_input = nn.Linear(self.latent_dim * self.categorical_dim
-                                       , hidden_dims[-1] * 4)
+                                       , hidden_dims[-1]*4)
 
         hidden_dims.reverse()
 
@@ -69,6 +73,7 @@ class CategoricalVAE(BaseVAE):
             )
 
 
+        print("DECODER: ", modules)
 
         self.decoder = nn.Sequential(*modules)
 
@@ -81,8 +86,8 @@ class CategoricalVAE(BaseVAE):
                                                output_padding=1),
                             nn.BatchNorm2d(hidden_dims[-1]),
                             nn.LeakyReLU(),
-                            nn.Conv2d(hidden_dims[-1], out_channels= 3,
-                                      kernel_size= 3, padding= 1),
+                            nn.Conv2d(hidden_dims[-1], out_channels= 1,
+                                      kernel_size= 7, padding= 1),
                             nn.Tanh())
         self.sampling_dist = torch.distributions.OneHotCategorical(1. / categorical_dim * torch.ones((self.categorical_dim, 1)))
 
@@ -94,6 +99,8 @@ class CategoricalVAE(BaseVAE):
         :return: (Tensor) Latent code [B x D x Q]
         """
         result = self.encoder(input)
+        print(result.shape)
+        
         result = torch.flatten(result, start_dim=1)
 
         # Split the result into mu and var components
@@ -111,8 +118,10 @@ class CategoricalVAE(BaseVAE):
         :return: (Tensor) [B x C x H x W]
         """
         result = self.decoder_input(z)
-        result = result.view(-1, 512, 2, 2)
+        print(result.shape)
+        result = result.view(-1, 256, 2, 2)
         result = self.decoder(result)
+        print(result.shape)
         result = self.final_layer(result)
         return result
 
@@ -150,6 +159,10 @@ class CategoricalVAE(BaseVAE):
         recons = args[0]
         input = args[1]
         q = args[2]
+        
+        
+        print("RECON: ", recons.shape)
+        print("INPUT: ", input.shape)
 
         q_p = F.softmax(q, dim=-1) # Convert the categorical codes into probabilities
 
