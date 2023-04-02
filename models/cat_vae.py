@@ -44,14 +44,14 @@ class CategoricalVAE(BaseVAE):
             in_channels = h_dim
 
         self.encoder = nn.Sequential(*modules)
-        self.fc_z = nn.Linear(hidden_dims[-1],
+        self.fc_z = nn.Linear(hidden_dims[-1]*4,
                                self.latent_dim * self.categorical_dim)
 
         # Build Decoder
         modules = []
 
         self.decoder_input = nn.Linear(self.latent_dim * self.categorical_dim
-                                       , hidden_dims[-1])
+                                       , hidden_dims[-1] * 4)
 
         hidden_dims.reverse()
 
@@ -149,9 +149,6 @@ class CategoricalVAE(BaseVAE):
         recons = args[0]
         input = args[1]
         q = args[2]
-
-        print(recons.shape)
-        print(input.shape)
 
         q_p = F.softmax(q, dim=-1) # Convert the categorical codes into probabilities
 
